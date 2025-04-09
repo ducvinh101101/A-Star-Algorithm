@@ -49,9 +49,9 @@ def A_Star(start, goal):
     visited = {}
 
     with open("output.txt", "w", encoding="utf-8") as file:
-        file.write(f"{'Duyệt điểm':<12} | {'Danh sách kề':<25} | {'g(x)':<6} | {'h(x)':<6} | Danh sách hàng đợi\n")
+        file.write(f"{'Duyệt điểm':<12} | {'Danh sách kề':<25} | {'g(x)':<25} | {'h(x)':<25} | Danh sách hàng đợi\n")
         file.write("-" * 90 + "\n")
-        file.write(f"{'':<12} | {'':<25} | {'':<6} | {'':<6} | {start_node.name+":"+str(start_node.h)}\n")
+        file.write(f"{'':<12} | {'':<25} | {'':<25} | {'':<25} | {start_node.name+":"+str(start_node.h)}\n")
 
         while not open_list.empty():
             _, current = open_list.get()
@@ -59,22 +59,22 @@ def A_Star(start, goal):
 
             neighbors = graph.get(current.name, [])
             name_neighbor = [name for name, weight in neighbors]
-
+            g_ = []
+            h_ = []
             for neighbor, weight in neighbors:
                 g_new = current.g + weight
                 h_new = heuristic.get(neighbor,0)
                 neighbor_node = Node(neighbor,current,g_new,h_new)
+                g_.append(g_new)
+                h_.append(h_new)
 
                 if neighbor not in visited or g_new < visited[neighbor]:
                     open_list.put((neighbor_node.g + neighbor_node.h, neighbor_node))
                     visited[neighbor] = g_new
 
-            g_current = current.g
-            h_current = current.h
-
             queue_str = " | ".join(f"{node.name}:{f}" for f, node in open_list.queue)
 
-            file.write(f"{current.name:<12} | {str(name_neighbor):<25} | {g_current:<6} | {h_current:<6} | {queue_str}\n")
+            file.write(f"{current.name:<12} | {str(name_neighbor):<25} | {str(g_):<25} | {str(h_):<25} | {queue_str}\n")
             if current.name == goal:
                 file.write("-" * 90 + "\n")
                 file.write("Đã tìm thấy đường đi.\n")
