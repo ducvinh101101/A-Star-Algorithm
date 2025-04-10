@@ -25,6 +25,8 @@ for line in lines[1:]:
     graph[node] = neighbors
     heuristic[node] = h
 
+
+
 class Node:
     def __init__(self, name, par=None, g=0, h=0):
         self.name = name
@@ -35,6 +37,13 @@ class Node:
     def __lt__(self, other):
         return self.g + self.h < other.g + other.h
 
+def check_triangle_inequality(graph, heuristic):
+    for u in graph:
+        for v, cost in graph[u]:
+            if heuristic[u] > heuristic[v] + cost:
+                return False
+    return True
+
 def getPath(node):
     path = []
     while node:
@@ -43,6 +52,16 @@ def getPath(node):
     return path[::-1]
 
 def A_Star(start, goal):
+    if goal not in graph:
+        with open("output.txt", "w", encoding="utf-8") as file:
+            file.write("Điểm đích không tồn tại trong đồ thị.\n")
+        return None
+
+    # if not check_triangle_inequality(graph, heuristic):
+    #     with open("output.txt", "w", encoding="utf-8") as file:
+    #         file.write("Heuristic không thỏa mãn tính chất tam giác.\n")
+    #     return None
+
     open_list = PriorityQueue()
     start_node = Node(start, None, 0, heuristic[start])
     open_list.put((start_node.g + start_node.h, start_node))
@@ -61,7 +80,12 @@ def A_Star(start, goal):
         g_ = []
         h_ = []
         f_ = []
-
+        if current.name == goal:
+            rows.append([current.name, "", "", "", "", "", ""])
+            with open("output.txt", "w", encoding="utf-8") as file:
+                file.write(tabulate(rows, headers=["Duyệt điểm", "Danh sách kề","k(u,v)" , "g(v)", "h(v)", "f(v)", "Danh sách hàng đợi"], tablefmt="grid"))
+                file.write("\nChi phí: " + str(current.g))
+            return getPath(current)
         for neighbor, weight in neighbors:
             g_new = current.g + weight
             h_new = heuristic.get(neighbor, 0)
@@ -86,13 +110,7 @@ def A_Star(start, goal):
             "\n".join(map(str, f_)),
             queue_str + "| ..."
         ])
-        if current.name == goal:
 
-            with open("output.txt", "w", encoding="utf-8") as file:
-                file.write(tabulate(rows, headers=["Duyệt điểm", "Danh sách kề","k(u,v)" , "g(v)", "h(v)", "f(v)", "Danh sách hàng đợi"], tablefmt="grid"))
-                file.write("\n\nĐã tìm thấy đường đi.\n")
-                file.write(f"Chi phí: {current.g}\n")
-            return getPath(current)
 
     with open("output.txt", "w", encoding="utf-8") as file:
         file.write(tabulate(rows, headers=["Duyệt điểm", "Danh sách kề", "k(u,v)" , "g(v)", "h(v)", "f(v)", "Danh sách hàng đợi"], tablefmt="grid"))
