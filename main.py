@@ -73,13 +73,13 @@ class Spot:
 
     def update_neighbors(self, grid):
         self.neighbors = []
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # xuống
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier():
             self.neighbors.append(grid[self.row + 1][self.col])
-        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # lên
+        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():
             self.neighbors.append(grid[self.row - 1][self.col])
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # phải
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier():
             self.neighbors.append(grid[self.row][self.col + 1])
-        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # trái
+        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier():
             self.neighbors.append(grid[self.row][self.col - 1])
 
     def __lt__(self, other):
@@ -189,7 +189,7 @@ def main(win, width):
             if event.type == pygame.QUIT:
                 run = False
 
-            if pygame.mouse.get_pressed()[0]: # Left click
+            if pygame.mouse.get_pressed()[0]:
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos, ROWS, width)
                 spot = grid[row][col]
@@ -202,7 +202,7 @@ def main(win, width):
                 elif spot != end and spot != start:
                     spot.make_barrier()
 
-            elif pygame.mouse.get_pressed()[2]: # Right click
+            elif pygame.mouse.get_pressed()[2]:
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos, ROWS, width)
                 spot = grid[row][col]

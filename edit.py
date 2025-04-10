@@ -1,7 +1,7 @@
 from queue import PriorityQueue
 from tabulate import tabulate
 
-with open("input.txt", "r") as f:
+with open("test.txt", "r") as f:
     lines = [line.strip() for line in f.readlines() if line.strip()]
 
 start, goal = lines[0].split()
@@ -61,6 +61,7 @@ def A_Star(start, goal):
         g_ = []
         h_ = []
         f_ = []
+
         for neighbor, weight in neighbors:
             g_new = current.g + weight
             h_new = heuristic.get(neighbor, 0)
@@ -73,7 +74,9 @@ def A_Star(start, goal):
                 open_list.put((neighbor_node.g + neighbor_node.h, neighbor_node))
                 visited[neighbor] = g_new
 
-        queue_str = " | ".join(f"{node.name}:{f}" for f, node in open_list.queue)
+        queue_str = " | ".join(f"{node.name}:{f}" for f, node in open_list.queue[:3])
+        if(current.name ==goal):
+            queue_str = ""
         rows.append([
             current.name,
             "\n".join(name_neighbor),
@@ -81,10 +84,10 @@ def A_Star(start, goal):
             "\n".join(map(str, g_)),
             "\n".join(map(str, h_)),
             "\n".join(map(str, f_)),
-            queue_str
+            queue_str + "| ..."
         ])
-
         if current.name == goal:
+
             with open("output.txt", "w", encoding="utf-8") as file:
                 file.write(tabulate(rows, headers=["Duyệt điểm", "Danh sách kề","k(u,v)" , "g(v)", "h(v)", "f(v)", "Danh sách hàng đợi"], tablefmt="grid"))
                 file.write("\n\nĐã tìm thấy đường đi.\n")
